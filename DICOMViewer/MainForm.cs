@@ -16,6 +16,8 @@ namespace DICOMViewer
 {
     public partial class MainForm : Form
     {
+        CFind cfind;
+
         public MainForm()
         {
             InitializeComponent();
@@ -23,7 +25,8 @@ namespace DICOMViewer
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            CFind cfind = new CFind
+            this.FormClosing += MainForm_FormClosing;
+            cfind = new CFind
             {
                 ImplementationClass = ConstDefineValues.CONFIGURATION_IMPLEMENTATIONCLASS,
                 ProtocolVersion = ConstDefineValues.CONFIGURATION_PROTOCOLVERSION,
@@ -36,13 +39,13 @@ namespace DICOMViewer
             DicomServer server = new DicomServer
             {
                 AETitle = "LEAD_SERVER",
-                Address = IPAddress.Parse(Convert.ToString("192.168.3.29")),
+                Address = IPAddress.Parse(Convert.ToString("192.168.1.137")),
                 Port = 104,
                 Timeout = 30,
                 IpType = DicomNetIpTypeFlags.Ipv4
             };
             CFindQuery dcmQuery = new CFindQuery();
-            cfind.Find(server, FindType.Study, dcmQuery, "CLIENT1");
+            cfind.Find(server, FindType.Study, dcmQuery, "Client1");
         }
         public delegate void ShowDataSetTextdelegate(DicomDataSet ds);
         private void ShowDataSetText(DicomDataSet ds)
@@ -59,6 +62,77 @@ namespace DICOMViewer
                 this.richTextBox1.Text += ds.ToString();
             }
         }
+
+        #region StudyListView相关方法
+        public delegate void StartUpdateDelegate(ListView lv);
+        private void StartUpdate(ListView lv)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new StartUpdateDelegate(StartUpdate), lv);
+            }
+            else
+            {
+                lv.Items.Clear();
+                lv.BeginUpdate();
+            }
+        }
+
+        public delegate void EndUpdateDelegate(ListView lv);
+        private void EndUpdate(ListView lv)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new EndUpdateDelegate(EndUpdate), lv);
+            }
+            else
+            {
+                lv.EndUpdate();
+            }
+        }
+
+        public delegate void AddStudyItemDelegate(DicomDataSet ds);
+        private void AddStudyItem(DicomDataSet ds)
+        {
+            ListViewItem item;
+            string tagValue;
+
+            if (InvokeRequired)
+            {
+                Invoke(new AddStudyItemDelegate(AddStudyItem), ds);
+            }
+            else
+            {
+                tagValue = Utils.GetStringValue(ds, DemoDicomTags.PatientID);
+                item = listViewStudies.Items.Add(tagValue); 
+
+                tagValue = Utils.GetStringValue(ds, DemoDicomTags.AccessionNumber);
+                item.SubItems.Add(tagValue);
+
+                tagValue = Utils.GetStringValue(ds, DemoDicomTags.PatientName);
+                item.SubItems.Add(tagValue);
+
+                tagValue = Utils.GetStringValue(ds, DemoDicomTags.PatientSex);
+                item.SubItems.Add(tagValue);
+
+                tagValue = Utils.GetStringValue(ds, DemoDicomTags.PatientBirthDate);
+                item.SubItems.Add(tagValue);
+
+                tagValue = Utils.GetStringValue(ds, DemoDicomTags.StudyDate);
+                item.SubItems.Add(tagValue);
+
+                tagValue = Utils.GetStringValue(ds, DemoDicomTags.ReferringPhysicianName);
+                item.SubItems.Add(tagValue);
+
+                tagValue = Utils.GetStringValue(ds, DemoDicomTags.StudyDescription);
+                item.SubItems.Add(tagValue);
+
+                item.Tag = Utils.GetStringValue(ds, DemoDicomTags.StudyInstanceUID);
+            }
+        }
+
+
+        #endregion
 
         private void cfind_Status(object sender, StatusEventArgs e)
         {
@@ -189,12 +263,13 @@ namespace DICOMViewer
             switch (e.Type)
             {
                 case FindType.Study:
+                    StartUpdate(listViewStudies);
                     foreach (DicomDataSet ds in e.Datasets)
                     {
-                        Console.Out.WriteLine(ds.ToString());
+                        AddStudyItem(ds);
                     }
+                    EndUpdate(listViewStudies);
                     break;
-
                 case FindType.StudySeries:
                     foreach (DicomDataSet ds in e.Datasets)
                     {
@@ -246,6 +321,36 @@ namespace DICOMViewer
                 }
             }
             //            }
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+//            Application.Exit();
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            
+            if (cfind != null)
+            {
+                cfind.Terminate();
+                cfind.CloseForced(true);
+            }
+
+        }
+
+        private void listViewStudies_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (listViewStudies.SelectedItems.Count == 0)
+                return;
+
+            //imageList.Items.Clear();
+
+            string patientID, studyInstance, seriesInstance;
+
+            patientID = listViewStudies.SelectedItems[0].SubItems[1].Text;
+            studyInstance = listViewStudies.SelectedItems[0].Tag as string;
+            //seriesInstance = listViewSeries.SelectedItems[0].Tag as string;
         }
     }
 }

@@ -30,10 +30,21 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.listViewStudies = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -49,6 +60,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.panel1);
             this.tabPage1.Controls.Add(this.richTextBox1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -57,6 +69,14 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "信息查询";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(6, 6);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(734, 64);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
             // 
             // tabPage2
             // 
@@ -68,13 +88,74 @@
             this.tabPage2.Text = "图像查看";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // richTextBox1
+            // panel1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(6, 6);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(827, 421);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
+            this.panel1.Controls.Add(this.listViewStudies);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel1.Location = new System.Drawing.Point(3, 76);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(965, 398);
+            this.panel1.TabIndex = 1;
+            // 
+            // listViewStudies
+            // 
+            this.listViewStudies.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader2,
+            this.columnHeader3,
+            this.columnHeader1,
+            this.columnHeader7,
+            this.columnHeader8,
+            this.columnHeader4,
+            this.columnHeader5,
+            this.columnHeader6});
+            this.listViewStudies.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listViewStudies.FullRowSelect = true;
+            this.listViewStudies.GridLines = true;
+            this.listViewStudies.HideSelection = false;
+            this.listViewStudies.Location = new System.Drawing.Point(0, 0);
+            this.listViewStudies.Name = "listViewStudies";
+            this.listViewStudies.Size = new System.Drawing.Size(965, 398);
+            this.listViewStudies.TabIndex = 1;
+            this.listViewStudies.UseCompatibleStateImageBehavior = false;
+            this.listViewStudies.View = System.Windows.Forms.View.Details;
+            this.listViewStudies.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listViewStudies_MouseDoubleClick);
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Patient Name";
+            this.columnHeader1.Width = 90;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Patient ID";
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Accession #";
+            this.columnHeader3.Width = 126;
+            // 
+            // columnHeader4
+            // 
+            this.columnHeader4.Text = "Study Date";
+            this.columnHeader4.Width = 100;
+            // 
+            // columnHeader5
+            // 
+            this.columnHeader5.Text = "Refer Dr Name";
+            this.columnHeader5.Width = 96;
+            // 
+            // columnHeader6
+            // 
+            this.columnHeader6.Text = "Description";
+            this.columnHeader6.Width = 129;
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "PatientSex";
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "PatientBirthday";
             // 
             // MainForm
             // 
@@ -84,9 +165,12 @@
             this.Controls.Add(this.tabControl1);
             this.Name = "MainForm";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -97,6 +181,16 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ListView listViewStudies;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.ColumnHeader columnHeader6;
+        private System.Windows.Forms.ColumnHeader columnHeader7;
+        private System.Windows.Forms.ColumnHeader columnHeader8;
     }
 }
 

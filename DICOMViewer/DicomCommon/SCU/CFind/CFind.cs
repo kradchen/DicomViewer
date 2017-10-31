@@ -407,9 +407,9 @@ namespace Leadtools.DicomDemos.Scu.CFind
         private string studyInstance;
         private string seriesInstance;
         private int clientPort;
-#if LEADTOOLS_V17_OR_LATER
+
         private DicomNetIpTypeFlags ipType = DicomNetIpTypeFlags.Ipv4;
-#endif
+
 
         /// <summary>
         /// C-FIND operation has completed.
