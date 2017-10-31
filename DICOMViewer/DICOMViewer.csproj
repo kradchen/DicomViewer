@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DICOMViewer</RootNamespace>
     <AssemblyName>DICOMViewer</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -26,6 +26,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -47,6 +48,62 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Leadtools, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.Codecs, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.Codecs.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.ColorConversion, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.ColorConversion.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.Controls.WinForms, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.Controls.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.Demos.Dialogs, Version=19.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.Demos.Dialogs.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.Dicom, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.Dicom.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.Dicom.Tables, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.Dicom.Tables.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.Drawing, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.ImageProcessing.Color, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.ImageProcessing.Color.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.ImageProcessing.Core, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.ImageProcessing.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.ImageProcessing.Effects, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.ImageProcessing.Effects.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.ImageProcessing.Utilities, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.ImageProcessing.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.Svg, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.Svg.dll</HintPath>
+    </Reference>
+    <Reference Include="Leadtools.Vector, Version=19.0.4.0, Culture=neutral, PublicKeyToken=9cf889f53ea9b907, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Dlls\Leadtools.Vector.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -55,6 +112,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Demos.cs" />
+    <Compile Include="Common\Messager.cs" />
+    <Compile Include="Common\UnlockSupport.cs" />
+    <Compile Include="DicomCommon\Base.cs" />
+    <Compile Include="DicomCommon\CStore.cs" />
+    <Compile Include="DicomCommon\DicomDSCollection.cs" />
+    <Compile Include="DicomCommon\DicomServer.cs" />
+    <Compile Include="DicomCommon\EditValueDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DicomCommon\PresentationContext.cs" />
+    <Compile Include="DicomCommon\PresentationContextCollection.cs" />
+    <Compile Include="DicomCommon\SCP\Scp.cs" />
+    <Compile Include="DicomCommon\SCU\CEcho\CEcho.cs" />
+    <Compile Include="DicomCommon\SCU\CFind\CFind.cs" />
+    <Compile Include="DicomCommon\SCU\Scu.cs" />
+    <Compile Include="DicomCommon\Tags.cs" />
+    <Compile Include="DicomCommon\Utils.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +138,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DicomCommon\EditValueDlg.resx">
+      <DependentUpon>EditValueDlg.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -71,7 +149,9 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
