@@ -100,13 +100,9 @@ namespace Leadtools.Demos
                 }
 
                 // Try registry next
-#if LTV19_CONFIG
                 imagesPath = @"Software\LEAD Technologies, Inc.\19\Images";
                 var unicodeImagesPath = @"Software\LEAD Technologies, Inc.\19\UnicodeImages";
-#elif LTV18_CONFIG
-            imagesPath = @"Software\LEAD Technologies, Inc.\18\Images";
-            string unicodeImagesPath = @"Software\LEAD Technologies, Inc.\18\UnicodeImages";
-#endif
+
                 var rk = Registry.LocalMachine.OpenSubKey(imagesPath);
                 if (rk == null)
                     rk = Registry.LocalMachine.OpenSubKey(unicodeImagesPath);

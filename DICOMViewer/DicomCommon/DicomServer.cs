@@ -13,9 +13,9 @@ namespace Leadtools.DicomDemos
       private string _AETitle = "";
       private int _Port = 104;
       private IPAddress _Address = IPAddress.Parse("127.0.0.1");
-#if LEADTOOLS_V17_OR_LATER
+
       private DicomNetIpTypeFlags _ipType;
-#endif
+
 
       private int _Timeout = 30;
 
@@ -74,13 +74,13 @@ namespace Leadtools.DicomDemos
          }
       }
 
-#if LEADTOOLS_V17_OR_LATER
+
       public DicomNetIpTypeFlags IpType
       {
          get { return _ipType; }
          set { _ipType = value; }
       }
-#endif
+
 
       /// <summary>
       /// About of time in milliseconds to wait for a response from
@@ -103,9 +103,8 @@ namespace Leadtools.DicomDemos
 
       public DicomServer( )
       {
-#if LEADTOOLS_V17_OR_LATER
+
          _ipType = DicomNetIpTypeFlags.Ipv4;
-#endif
       }
    }
 }

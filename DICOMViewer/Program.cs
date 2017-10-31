@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Windows.Forms;
 using Leadtools;
 using Leadtools.Demos;
 using Leadtools.DicomDemos;
+using Leadtools.DicomDemos.Scu.CFind;
+using DICOMViewer.Config;
+using Leadtools.Dicom;
+// ReSharper disable All
 
 namespace DICOMViewer
 {
@@ -15,13 +20,20 @@ namespace DICOMViewer
         [STAThread]
         public static void Main(string[] args)
         {
-            //设置License
+            startApplication(args);
+           
+        }
+
+        private static void startApplication(string[] args)
+        {
+//设置License
             if (!Support.SetLicense())
                 return;
             //leadtools验证liccense
             if (RasterSupport.IsLocked(RasterSupportType.DicomCommunication))
             {
-                MessageBox.Show(String.Format("{0} Support is locked!", RasterSupportType.DicomCommunication.ToString()), "Warning");
+                MessageBox.Show(String.Format("{0} Support is locked!", RasterSupportType.DicomCommunication.ToString()),
+                    "Warning");
                 return;
             }
             //对Uac进行判断，如果需要提升权限进行运行，已通过manifest设置requireAdministrator绕过
