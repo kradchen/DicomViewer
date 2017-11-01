@@ -133,6 +133,7 @@
     <Compile Include="DicomCommon\SCU\CFind\CFind.cs" />
     <Compile Include="DicomCommon\SCU\Scu.cs" />
     <Compile Include="DicomCommon\Tags.cs" />
+    <Compile Include="DicomCommon\UserDicomDir.cs" />
     <Compile Include="DicomCommon\Utils.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
