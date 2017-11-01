@@ -277,13 +277,9 @@ namespace DICOMViewer
                     {
                         th = new Thread(() =>
                         {
-                            Console.Out.WriteLine("th start!");
                             cfind.workThread.Join();
-                            if (queue.Count > 0)
-                            {
-                                Console.Out.WriteLine("send move!");
-                                SendMoveSeries();
-                            }
+                            if (queue.Count <= 0) return;
+                            SendMoveSeries();
                         });
                     }
                     th.Start();
@@ -296,11 +292,20 @@ namespace DICOMViewer
         {
             if (queue.Count <= 0) return;
             string seriesInstance = queue.Dequeue();
-            Console.WriteLine("server:" + server.ToString());
-            Console.Out.WriteLine("seriesInstance = {0}", seriesInstance);
-            Console.Out.WriteLine("studyInstance = {0}", studyInstance);
-            Console.Out.WriteLine("patientId = {0}", patientId);
             cfind.MoveSeries(server, AETitle, patientId, studyInstance, seriesInstance, Port);
+//            int i = 1;
+//            while (queue.Count>0)
+//            {
+//                string seriesInstance = queue.Dequeue();
+//                CFind cmove =  new CFind
+//                {
+//                    ImplementationClass = ConstDefineValues.CONFIGURATION_IMPLEMENTATIONCLASS,
+//                    ProtocolVersion = ConstDefineValues.CONFIGURATION_PROTOCOLVERSION,
+//                    ImplementationVersionName = ConstDefineValues.CONFIGURATION_IMPLEMENTATIONVERSIONNAME
+//                };
+//                cmove.MoveComplete += cfind_MoveComplete;
+//                cmove.MoveSeries(server, AETitle, patientId, studyInstance, seriesInstance, Port+i);
+//            }
         }
 
         private void cfind_MoveComplete(object sender, MoveCompleteEventArgs e)
@@ -327,48 +332,6 @@ namespace DICOMViewer
                 });
             }
             th.Start();
-            //            if (InvokeRequired)
-            //            {
-            //                Invoke(new MoveCompleteEventHandler(cfind_MoveComplete), sender, e);
-            //            }
-            //            else
-            //            {
-            //            foreach (DicomDataSet ds in e.Datasets)
-            //            {
-            //                DicomElement element;
-            //
-            //                try
-            //                {
-            //                    ds.Save("", DicomDataSetSaveFlags.None);
-            //                    element = ds.FindFirstElement(null, DemoDicomTags.PixelData, true);
-            //                    if (element == null)
-            //                        continue;
-            //
-            //                    for (int i = 0; i < ds.GetImageCount(element); i++)
-            //                    {
-            //                        RasterImage image;
-            //                        DicomImageInformation info = ds.GetImageInformation(element, i);
-            //
-            //                        image = ds.GetImage(element, i, 0, info.IsGray ? RasterByteOrder.Gray : RasterByteOrder.Rgb,
-            //                            DicomGetImageFlags.AutoApplyModalityLut |
-            //                            DicomGetImageFlags.AutoApplyVoiLut |
-            //                            DicomGetImageFlags.AllowRangeExpansion);
-            //                        if (image != null)
-            //                        {
-            //                            image.s
-            //                        }
-            //                    }
-            //                }
-            //                catch (DicomException de)
-            //                {
-            //                    StatusEventArgs eventArg = new StatusEventArgs();
-            //
-            //                    eventArg._Error = de.Code;
-            //                    eventArg._Type = StatusType.Error;
-            //                    cfind_Status(new object(), eventArg);
-            //                }
-            //            }
-            //            }
         }
 
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
