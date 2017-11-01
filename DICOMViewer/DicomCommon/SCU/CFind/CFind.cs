@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Text;
 using System.ComponentModel;
+using System.Windows.Forms;
 using Leadtools;
 using Leadtools.Dicom;
 using Leadtools.DicomDemos;
@@ -565,14 +566,12 @@ namespace Leadtools.DicomDemos.Scu.CFind
             this.studyInstance = studyInstance;
             this.seriesInstance = seriesInstance;
             this.clientPort = clientPort;
-#if LEADTOOLS_V17_OR_LATER
             this.ipType = server.IpType;
-#endif
 
             ret = Associate(server, AETitle, new SCUProcessFunc(MoveSeriesProcess));
             if (ret != DicomExceptionCode.Success)
             {
-                //MessageBox.Show("Error during association: ",ret.ToString());
+                MessageBox.Show("Error during association: ",ret.ToString());
                 return;
             }
         }
@@ -688,11 +687,7 @@ namespace Leadtools.DicomDemos.Scu.CFind
                 scp.dsCollection = dsCollection;
                 scp.ImplementationClass = ImplementationClass;
                 scp.ImplementationVersionName = ImplementationVersionName;
-#if LEADTOOLS_V17_OR_LATER
                 ret = scp.Listen(clientPort, 1, ipType);
-#else
-            ret = scp.Listen(clientPort, 1);
-   #endif
                 if (ret != DicomExceptionCode.Success)
                 {
                     InvokeStatusEvent(StatusType.Error, ret);

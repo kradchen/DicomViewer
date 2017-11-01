@@ -71,7 +71,6 @@ namespace Leadtools.DicomDemos.Scp
 
          return ret;
       }
-#if LEADTOOLS_V17_OR_LATER
         /// <summary>
         /// ¼àÌý¶Ë¿Úº¯Êý
         /// </summary>
@@ -94,7 +93,7 @@ namespace Leadtools.DicomDemos.Scp
 
          return ret;
       }
-#endif
+
 
       public override void Init( )
       {

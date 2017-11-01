@@ -30,21 +30,23 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel1 = new System.Windows.Forms.Panel();
             this.listViewStudies = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader6 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.listViewSeries = new System.Windows.Forms.ListView();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -69,24 +71,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "信息查询";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // richTextBox1
-            // 
-            this.richTextBox1.Location = new System.Drawing.Point(6, 6);
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(734, 64);
-            this.richTextBox1.TabIndex = 0;
-            this.richTextBox1.Text = "";
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(971, 477);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "图像查看";
-            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
@@ -120,11 +104,6 @@
             this.listViewStudies.View = System.Windows.Forms.View.Details;
             this.listViewStudies.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listViewStudies_MouseDoubleClick);
             // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Patient Name";
-            this.columnHeader1.Width = 90;
-            // 
             // columnHeader2
             // 
             this.columnHeader2.Text = "Patient ID";
@@ -133,6 +112,19 @@
             // 
             this.columnHeader3.Text = "Accession #";
             this.columnHeader3.Width = 126;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Patient Name";
+            this.columnHeader1.Width = 90;
+            // 
+            // columnHeader7
+            // 
+            this.columnHeader7.Text = "PatientSex";
+            // 
+            // columnHeader8
+            // 
+            this.columnHeader8.Text = "PatientBirthday";
             // 
             // columnHeader4
             // 
@@ -149,13 +141,33 @@
             this.columnHeader6.Text = "Description";
             this.columnHeader6.Width = 129;
             // 
-            // columnHeader7
+            // richTextBox1
             // 
-            this.columnHeader7.Text = "PatientSex";
+            this.richTextBox1.Location = new System.Drawing.Point(6, 6);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(734, 64);
+            this.richTextBox1.TabIndex = 0;
+            this.richTextBox1.Text = "";
             // 
-            // columnHeader8
+            // tabPage2
             // 
-            this.columnHeader8.Text = "PatientBirthday";
+            this.tabPage2.Controls.Add(this.listViewSeries);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(971, 477);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "图像查看";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // listViewSeries
+            // 
+            this.listViewSeries.Location = new System.Drawing.Point(0, 0);
+            this.listViewSeries.Name = "listViewSeries";
+            this.listViewSeries.Size = new System.Drawing.Size(137, 477);
+            this.listViewSeries.TabIndex = 0;
+            this.listViewSeries.UseCompatibleStateImageBehavior = false;
+            this.listViewSeries.View = System.Windows.Forms.View.List;
             // 
             // MainForm
             // 
@@ -171,6 +183,7 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.tabPage2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -191,6 +204,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.ColumnHeader columnHeader7;
         private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ListView listViewSeries;
     }
 }
 

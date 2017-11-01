@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using DICOMViewer.Config;
 using Leadtools;
@@ -17,14 +18,18 @@ namespace DICOMViewer
     public partial class MainForm : Form
     {
         CFind cfind;
+        private DicomServer server;
+        private string AETitle = "Client1";
+        private int Port = 1000;
+
+        private Queue<string> queue = new Queue<string>();
+        private string patientId;
+        private string studyInstance;
+        private Thread th;
 
         public MainForm()
         {
             InitializeComponent();
-        }
-
-        private void MainForm_Load(object sender, EventArgs e)
-        {
             this.FormClosing += MainForm_FormClosing;
             cfind = new CFind
             {
@@ -36,35 +41,26 @@ namespace DICOMViewer
             cfind.FindComplete += cfind_FindComplete;
             cfind.MoveComplete += cfind_MoveComplete;
 
-            DicomServer server = new DicomServer
+            server = new DicomServer
             {
                 AETitle = "LEAD_SERVER",
-                Address = IPAddress.Parse(Convert.ToString("192.168.1.137")),
+                Address = IPAddress.Parse(Convert.ToString("192.168.3.29")),
                 Port = 104,
                 Timeout = 30,
                 IpType = DicomNetIpTypeFlags.Ipv4
             };
-            CFindQuery dcmQuery = new CFindQuery();
-            cfind.Find(server, FindType.Study, dcmQuery, "Client1");
         }
-        public delegate void ShowDataSetTextdelegate(DicomDataSet ds);
-        private void ShowDataSetText(DicomDataSet ds)
-        {
-            ListViewItem item;
-            string tagValue;
 
-            if (InvokeRequired)
-            {
-                Invoke(new ShowDataSetTextdelegate(ShowDataSetText), ds);
-            }
-            else
-            {
-                this.richTextBox1.Text += ds.ToString();
-            }
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            CFindQuery dcmQuery = new CFindQuery();
+            cfind.Find(server, FindType.Study, dcmQuery, AETitle);
         }
 
         #region StudyListView相关方法
+
         public delegate void StartUpdateDelegate(ListView lv);
+
         private void StartUpdate(ListView lv)
         {
             if (InvokeRequired)
@@ -79,6 +75,7 @@ namespace DICOMViewer
         }
 
         public delegate void EndUpdateDelegate(ListView lv);
+
         private void EndUpdate(ListView lv)
         {
             if (InvokeRequired)
@@ -92,6 +89,7 @@ namespace DICOMViewer
         }
 
         public delegate void AddStudyItemDelegate(DicomDataSet ds);
+
         private void AddStudyItem(DicomDataSet ds)
         {
             ListViewItem item;
@@ -104,7 +102,7 @@ namespace DICOMViewer
             else
             {
                 tagValue = Utils.GetStringValue(ds, DemoDicomTags.PatientID);
-                item = listViewStudies.Items.Add(tagValue); 
+                item = listViewStudies.Items.Add(tagValue);
 
                 tagValue = Utils.GetStringValue(ds, DemoDicomTags.AccessionNumber);
                 item.SubItems.Add(tagValue);
@@ -130,7 +128,6 @@ namespace DICOMViewer
                 item.Tag = Utils.GetStringValue(ds, DemoDicomTags.StudyInstanceUID);
             }
         }
-
 
         #endregion
 
@@ -273,53 +270,104 @@ namespace DICOMViewer
                 case FindType.StudySeries:
                     foreach (DicomDataSet ds in e.Datasets)
                     {
-                        Console.Out.WriteLine(ds.ToString());
+                        string SeriesInstanceUID = Utils.GetStringValue(ds, DemoDicomTags.SeriesInstanceUID);
+                        queue.Enqueue(SeriesInstanceUID);
                     }
+                    if (th == null || (th != null && !th.IsAlive))
+                    {
+                        th = new Thread(() =>
+                        {
+                            Console.Out.WriteLine("th start!");
+                            cfind.workThread.Join();
+                            if (queue.Count > 0)
+                            {
+                                Console.Out.WriteLine("send move!");
+                                SendMoveSeries();
+                            }
+                        });
+                    }
+                    th.Start();
                     break;
             }
         }
 
+
+        private void SendMoveSeries()
+        {
+            if (queue.Count <= 0) return;
+            string seriesInstance = queue.Dequeue();
+            Console.WriteLine("server:" + server.ToString());
+            Console.Out.WriteLine("seriesInstance = {0}", seriesInstance);
+            Console.Out.WriteLine("studyInstance = {0}", studyInstance);
+            Console.Out.WriteLine("patientId = {0}", patientId);
+            cfind.MoveSeries(server, AETitle, patientId, studyInstance, seriesInstance, Port);
+        }
+
         private void cfind_MoveComplete(object sender, MoveCompleteEventArgs e)
         {
+            for (int i = 0; i < e.Datasets.Count; i++)
+            {
+                Console.Out.WriteLine("begin ds save");
+                DicomDataSet ds = e.Datasets[i];
+                ds.Save(Application.StartupPath + "//dicomfile//" + i.ToString() + ".dcm", DicomDataSetSaveFlags.None);
+                Console.Out.WriteLine("end save");
+            }
+            if (queue.Count <= 0) return;
+            if (th == null || (th != null && !th.IsAlive))
+            {
+                th = new Thread(() =>
+                {
+                    Console.Out.WriteLine("th start!");
+                    cfind.workThread.Join();
+                    if (queue.Count > 0)
+                    {
+                        Console.Out.WriteLine("send move!");
+                        SendMoveSeries();
+                    }
+                });
+            }
+            th.Start();
             //            if (InvokeRequired)
             //            {
             //                Invoke(new MoveCompleteEventHandler(cfind_MoveComplete), sender, e);
             //            }
             //            else
             //            {
-            foreach (DicomDataSet ds in e.Datasets)
-            {
-                DicomElement element;
-
-                try
-                {
-                    element = ds.FindFirstElement(null, DemoDicomTags.PixelData, true);
-                    if (element == null)
-                        continue;
-
-                    for (int i = 0; i < ds.GetImageCount(element); i++)
-                    {
-                        RasterImage image;
-                        DicomImageInformation info = ds.GetImageInformation(element, i);
-
-                        image = ds.GetImage(element, i, 0, info.IsGray ? RasterByteOrder.Gray : RasterByteOrder.Rgb,
-                            DicomGetImageFlags.AutoApplyModalityLut |
-                            DicomGetImageFlags.AutoApplyVoiLut |
-                            DicomGetImageFlags.AllowRangeExpansion);
-                        if (image != null)
-                        {
-                        }
-                    }
-                }
-                catch (DicomException de)
-                {
-                    StatusEventArgs eventArg = new StatusEventArgs();
-
-                    eventArg._Error = de.Code;
-                    eventArg._Type = StatusType.Error;
-                    cfind_Status(new object(), eventArg);
-                }
-            }
+            //            foreach (DicomDataSet ds in e.Datasets)
+            //            {
+            //                DicomElement element;
+            //
+            //                try
+            //                {
+            //                    ds.Save("", DicomDataSetSaveFlags.None);
+            //                    element = ds.FindFirstElement(null, DemoDicomTags.PixelData, true);
+            //                    if (element == null)
+            //                        continue;
+            //
+            //                    for (int i = 0; i < ds.GetImageCount(element); i++)
+            //                    {
+            //                        RasterImage image;
+            //                        DicomImageInformation info = ds.GetImageInformation(element, i);
+            //
+            //                        image = ds.GetImage(element, i, 0, info.IsGray ? RasterByteOrder.Gray : RasterByteOrder.Rgb,
+            //                            DicomGetImageFlags.AutoApplyModalityLut |
+            //                            DicomGetImageFlags.AutoApplyVoiLut |
+            //                            DicomGetImageFlags.AllowRangeExpansion);
+            //                        if (image != null)
+            //                        {
+            //                            image.s
+            //                        }
+            //                    }
+            //                }
+            //                catch (DicomException de)
+            //                {
+            //                    StatusEventArgs eventArg = new StatusEventArgs();
+            //
+            //                    eventArg._Error = de.Code;
+            //                    eventArg._Type = StatusType.Error;
+            //                    cfind_Status(new object(), eventArg);
+            //                }
+            //            }
             //            }
         }
 
@@ -330,27 +378,52 @@ namespace DICOMViewer
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            
             if (cfind != null)
             {
                 cfind.Terminate();
                 cfind.CloseForced(true);
             }
+        }
 
+        public delegate void AddSeriesItemDelegate(DicomDataSet ds);
+
+        private void AddSeriesItem(DicomDataSet ds)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new AddSeriesItemDelegate(AddSeriesItem), ds);
+            }
+            else
+            {
+                ListViewItem item = new ListViewItem();
+                item.ImageIndex = listViewSeries.Items.Count;
+                StringBuilder sb = new StringBuilder();
+                sb.AppendFormat("序列码：{0}", Utils.GetStringValue(ds, DemoDicomTags.SeriesNumber));
+
+                sb.AppendLine();
+                sb.AppendFormat("检查类型：", Utils.GetStringValue(ds, DemoDicomTags.Modality));
+                sb.AppendLine();
+                sb.AppendFormat("相关实例数量：", Utils.GetStringValue(ds, DemoDicomTags.NumberOfSeriesRelatedInstances));
+                item.Text = sb.ToString();
+                item.Tag = Utils.GetStringValue(ds, DemoDicomTags.SeriesInstanceUID);
+                listViewSeries.Items.Add(item);
+            }
         }
 
         private void listViewStudies_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (listViewStudies.SelectedItems.Count == 0)
                 return;
-
-            //imageList.Items.Clear();
-
-            string patientID, studyInstance, seriesInstance;
-
-            patientID = listViewStudies.SelectedItems[0].SubItems[1].Text;
+            //reset related controls
+            this.patientId = listViewStudies.SelectedItems[0].SubItems[0].Text;
             studyInstance = listViewStudies.SelectedItems[0].Tag as string;
-            //seriesInstance = listViewSeries.SelectedItems[0].Tag as string;
+            if (!string.IsNullOrEmpty(studyInstance))
+            {
+                CFindQuery query = new CFindQuery();
+                query.StudyInstanceUid = studyInstance;
+                query.PatientID = listViewStudies.SelectedItems[0].SubItems[0].Text;
+                cfind.Find(server, FindType.StudySeries, query, AETitle);
+            }
         }
     }
 }

@@ -635,8 +635,6 @@ namespace Leadtools.DicomDemos
           }
        }
 
-#if LEADTOOLS_V175_OR_LATER
-
       // Returns string.empty if valid
       // Otherwise, returns an error message
        public static bool IsValidHostnameOrAddress(string hostNameOrAddress, out string error)
@@ -692,7 +690,6 @@ namespace Leadtools.DicomDemos
 
           return true;
        }
-#endif // LEADTOOLS_V175_OR_LATER
    }
 
    [Serializable]

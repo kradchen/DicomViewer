@@ -240,11 +240,8 @@ namespace Leadtools.DicomDemos.Scu
          try
          {
             _Rejected = false;
-#if LEADTOOLS_V17_OR_LATER
             Connect(null, 0, server.Address.ToString(), server.Port , server.IpType);
-#else
-            Connect(null, 0, server.Address.ToString(), server.Port);
-#endif
+
             if(!Wait())
             {
                //
@@ -346,7 +343,6 @@ namespace Leadtools.DicomDemos.Scu
 
          workThread = new Thread(new ThreadStart(workInfo.DoAssociate));
          workThread.Start();
-
          return DicomExceptionCode.Success;
       }
 
@@ -376,7 +372,7 @@ namespace Leadtools.DicomDemos.Scu
          if(workThread != null && workThread.IsAlive)
             workThread.Abort();
       }
-         catch (Exception )
+         catch (Exception  ex)
          {
          }
          finally
